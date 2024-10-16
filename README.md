@@ -15,5 +15,5 @@ Currently, errorutil provides error chaining mechanism with hierachy, and auto s
 ## Installation
 
 ```bash
-$ go get https://github.com/mathpresso/coxwave/go-errorutil
+$ go get https://github.com/coxwave/go-errorutil
 ```

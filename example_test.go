@@ -3,7 +3,7 @@ package errorutil_test
 import (
 	"errors"
 
-	"github.com/mathpresso/go-utils/errorutil"
+	"github.com/coxwave/go-errorutil"
 )
 
 // If you want to just wrap error with stack trace, simply wrap your error with .Wrap()

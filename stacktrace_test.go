@@ -52,9 +52,9 @@ func TestProperStackTrace(t *testing.T) {
 				return simpleTraceable(1)
 			},
 			pattern: []string{
-				"github.com/mathpresso/go-utils/errorutil.traceableFromCallers",
-				"github.com/mathpresso/go-utils/errorutil.simpleTraceable",
-				"github.com/mathpresso/go-utils/errorutil.TestProperStackTrace.",
+				"github.com/coxwave/go-errorutil.traceableFromCallers",
+				"github.com/coxwave/go-errorutil.simpleTraceable",
+				"github.com/coxwave/go-errorutil.TestProperStackTrace.",
 			},
 		},
 		{
@@ -63,9 +63,9 @@ func TestProperStackTrace(t *testing.T) {
 				return traceableCallWrapper(2)
 			},
 			pattern: []string{
-				"github.com/mathpresso/go-utils/errorutil.traceableFuncBuilder.",
-				"github.com/mathpresso/go-utils/errorutil.traceableCallWrapper",
-				"github.com/mathpresso/go-utils/errorutil.TestProperStackTrace.",
+				"github.com/coxwave/go-errorutil.traceableFuncBuilder.",
+				"github.com/coxwave/go-errorutil.traceableCallWrapper",
+				"github.com/coxwave/go-errorutil.TestProperStackTrace.",
 			},
 		},
 	}
