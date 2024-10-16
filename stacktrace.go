@@ -9,20 +9,20 @@ import (
 	"strings"
 )
 
-var _ fmt.Formatter = (*frame)(nil)
+var _ fmt.Formatter = (*Frame)(nil)
 
-// Frame represents a program counter inside a stack frame.
+// Frame represents a program counter inside a stack Frame.
 // For historical reasons if Frame is interpreted as a uintptr
 // its value represents the program counter + 1.
-type frame uintptr
+type Frame uintptr
 
-// pc returns the program counter for this frame;
+// pc returns the program counter for this Frame;
 // multiple frames may have the same PC value.
-func (f frame) pc() uintptr { return uintptr(f) - 1 }
+func (f Frame) pc() uintptr { return uintptr(f) - 1 }
 
 // file returns the full path to the file that contains the
 // function for this Frame's pc.
-func (f frame) file() string {
+func (f Frame) file() string {
 	fn := runtime.FuncForPC(f.pc())
 	if fn == nil {
 		return "unknown"
@@ -33,7 +33,7 @@ func (f frame) file() string {
 
 // line returns the line number of source code of the
 // function for this Frame's pc.
-func (f frame) line() int {
+func (f Frame) line() int {
 	fn := runtime.FuncForPC(f.pc())
 	if fn == nil {
 		return 0
@@ -43,7 +43,7 @@ func (f frame) line() int {
 }
 
 // name returns the name of this function, if known.
-func (f frame) name() string {
+func (f Frame) name() string {
 	fn := runtime.FuncForPC(f.pc())
 	if fn == nil {
 		return "unknown"
@@ -51,7 +51,7 @@ func (f frame) name() string {
 	return fn.Name()
 }
 
-// Format formats the frame according to the fmt.Formatter interface.
+// Format formats the Frame according to the fmt.Formatter interface.
 //
 //	%s    source file
 //	%d    source line
@@ -63,7 +63,7 @@ func (f frame) name() string {
 //	%+s   function name and path of source file relative to the compile time
 //	      GOPATH separated by \n\t (<funcname>\n\t<path>)
 //	%+v   equivalent to %+s:%d
-func (f frame) Format(s fmt.State, verb rune) {
+func (f Frame) Format(s fmt.State, verb rune) {
 	// funcname removes the path prefix component of a function's name reported by func.Name().
 	funcname := func(name string) string {
 		i := strings.LastIndex(name, "/")
@@ -95,7 +95,7 @@ func (f frame) Format(s fmt.State, verb rune) {
 
 // MarshalText formats a stacktrace Frame as a text string. The output is the
 // same as that of fmt.Sprintf("%+v", f), but without newlines or tabs.
-func (f frame) MarshalText() ([]byte, error) {
+func (f Frame) MarshalText() ([]byte, error) {
 	name := f.name()
 	if name == "unknown" {
 		return []byte(name), nil
@@ -106,7 +106,7 @@ func (f frame) MarshalText() ([]byte, error) {
 var _ fmt.Formatter = (*StackTrace)(nil)
 
 // StackTrace is stack of Frames from innermost (newest) to outermost (oldest).
-type StackTrace []frame
+type StackTrace []Frame
 
 // Format formats the stack of Frames according to the fmt.Formatter interface.
 //
@@ -126,7 +126,7 @@ func (st StackTrace) Format(s fmt.State, verb rune) {
 				f.Format(s, verb)
 			}
 		case s.Flag('#'):
-			_, _ = fmt.Fprintf(s, "%#v", []frame(st))
+			_, _ = fmt.Fprintf(s, "%#v", []Frame(st))
 		default:
 			st.formatSlice(s, verb)
 		}
@@ -154,9 +154,9 @@ type traceable []uintptr
 // StackTrace provides program counters.
 // Method signature was inspired from https://github.com/pkg/errors and https://github.com/getsentry/sentry-go support this.
 func (t *traceable) StackTrace() StackTrace {
-	fs := make([]frame, len(*t))
+	fs := make([]Frame, len(*t))
 	for i := 0; i < len(fs); i++ {
-		fs[i] = frame((*t)[i])
+		fs[i] = Frame((*t)[i])
 	}
 	return fs
 }
