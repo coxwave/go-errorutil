@@ -39,11 +39,12 @@ func (w *wrapped) Format(f fmt.State, verb rune) {
 }
 
 // Wrap wraps the error with provided options.
-func Wrap(err error, opts ...wrapOpt) error {
+func Wrap(err error, opts ...WrapOpt) error {
 	if err == nil {
 		return nil
 	}
-	if we, ok := err.(*wrapped); ok && len(opts) == 0 {
+	var we *wrapped
+	if errors.As(err, &we) && len(opts) == 0 {
 		// If error is already wrapped, and no additional options provided, just return it
 		return we
 	}
@@ -60,18 +61,18 @@ func Wrap(err error, opts ...wrapOpt) error {
 	return w
 }
 
-type wrapOpt func(w *wrapped)
+type WrapOpt func(w *wrapped)
 
 // AutoStackTrace is the option which automatically bind caller's stacktrace to error. This makes some error-capturing module (like https://github.com/getsentry/sentry-go) can extract proper stacktrace of your error.
 // For convenience, this option is enabled by default even if you don't include it.
-func AutoStackTrace() wrapOpt {
+func AutoStackTrace() WrapOpt {
 	return func(w *wrapped) {
 		w.traceable = traceableFromCallers(4)
 	}
 }
 
 // FromCause is the option which wraps the error with provided cause. If you Unwrap this error, provided cause will be extracted.
-func FromCause(cause error) wrapOpt {
+func FromCause(cause error) WrapOpt {
 	return func(w *wrapped) {
 		w.causer = &causer{cause: cause}
 	}

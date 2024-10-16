@@ -103,10 +103,10 @@ func (f frame) MarshalText() ([]byte, error) {
 	return []byte(fmt.Sprintf("%s %s:%d", name, f.file(), f.line())), nil
 }
 
-var _ fmt.Formatter = (*stackTrace)(nil)
+var _ fmt.Formatter = (*StackTrace)(nil)
 
-// stackTrace is stack of Frames from innermost (newest) to outermost (oldest).
-type stackTrace []frame
+// StackTrace is stack of Frames from innermost (newest) to outermost (oldest).
+type StackTrace []frame
 
 // Format formats the stack of Frames according to the fmt.Formatter interface.
 //
@@ -116,7 +116,7 @@ type stackTrace []frame
 // Format accepts flags that alter the printing of some verbs, as follows:
 //
 //	%+v   Prints filename, function, and line number for each Frame in the stack.
-func (st stackTrace) Format(s fmt.State, verb rune) {
+func (st StackTrace) Format(s fmt.State, verb rune) {
 	switch verb {
 	case 'v':
 		switch {
@@ -135,9 +135,9 @@ func (st stackTrace) Format(s fmt.State, verb rune) {
 	}
 }
 
-// formatSlice will format this stackTrace into the given buffer as a slice of
+// formatSlice will format this StackTrace into the given buffer as a slice of
 // Frame, only valid when called with '%s' or '%v'.
-func (st stackTrace) formatSlice(s fmt.State, verb rune) {
+func (st StackTrace) formatSlice(s fmt.State, verb rune) {
 	_, _ = io.WriteString(s, "[")
 	for i, f := range st {
 		if i > 0 {
@@ -153,7 +153,7 @@ type traceable []uintptr
 
 // StackTrace provides program counters.
 // Method signature was inspired from https://github.com/pkg/errors and https://github.com/getsentry/sentry-go support this.
-func (t *traceable) StackTrace() stackTrace {
+func (t *traceable) StackTrace() StackTrace {
 	fs := make([]frame, len(*t))
 	for i := 0; i < len(fs); i++ {
 		fs[i] = frame((*t)[i])
