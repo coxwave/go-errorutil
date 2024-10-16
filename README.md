@@ -4,7 +4,7 @@ This is a fork of [mathpresso/go-utils/errorutil](https://github.com/mathpresso/
 
 ---
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/coxwave/go-errorutil.svg)](https://pkg.go.dev/badge/github.com/coxwave/go-errorutil)
+[![Go Reference](https://pkg.go.dev/badge/github.com/coxwave/go-errorutil.svg)](https://pkg.go.dev/github.com/coxwave/go-errorutil)
 
 Package errorutil provides simple error wrapper for some features. Inspired by https://github.com/pkg/errors
 
