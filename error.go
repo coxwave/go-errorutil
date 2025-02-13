@@ -77,3 +77,17 @@ func FromCause(cause error) WrapOpt {
 		w.causer = &causer{cause: cause}
 	}
 }
+
+// OriginalErr returns the original error without any wrapping
+func OriginalErr(err error) error {
+	if err == nil {
+		return nil
+	}
+
+	var we *wrapped
+	if !errors.As(err, &we) {
+		return err
+	}
+
+	return we.error
+}
